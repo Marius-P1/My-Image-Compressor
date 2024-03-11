@@ -1,3 +1,10 @@
+# Vscode related files
+.vscode
+
+# Executable
+imageCompressor
+
+# Haskell related files
 dist
 dist-*
 cabal-dev
@@ -21,3 +28,8 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
+
+# Useless files
+*.log
+coverage/
+doc/
