@@ -1,0 +1,165 @@
+# This file is used to check the coding style, compile the
+# repository, run the tests on the repository and push the
+# repository to the Epitech repository.
+# For the name a true evidence of the power of the Chocolatine.
+name: A Chocolatine is always good
+
+
+# Run on all pushes and pull requests unless
+# the branch name starts with "ga-ignore-".
+on:
+  push:
+    branches-ignore:
+      - 'ga-ignore-**'
+  pull_request:
+    branches-ignore:
+      - 'ga-ignore-**'
+
+
+# Define the environment variables.
+env:
+
+  # The list of lib to check.
+  # The lib must be separated by a comma.
+  LIB: imageCompressor
+
+  # The URL of the mirror repository.
+  MIRROR_URL: git@github.com:EpitechPromo2027/B-FUN-400-NAN-4-1-wolfram-marius.pain.git
+
+
+# Define the jobs to run.
+# Each job is a set of steps that will be run when you push or
+# open a pull request.
+# If a job fails, the next jobs will not be run.
+jobs:
+
+  # Make a compilation check on the repository
+  # and check if the lib exists.
+  check_compilation:
+    runs-on: ubuntu-latest
+    container:
+      image: epitechcontent/epitest-docker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Permissions bug workaround
+        run: "chown -R $(id -un):$(id -gn) ~"
+
+      - name: Git bug workaround
+        run: "chown -R $(id -un):$(id -gn) ."
+
+      - name: Check lib compilation
+        run: make
+        timeout-minutes: 2
+
+      - name: Stop if compilation failed
+        if: ${{ failure() }}
+        run: exit 1
+
+      - name: Clean
+        run: make clean
+
+      - name: Check if lib exist exists
+        run: |
+          IFS=','
+          for lib_path in $LIB; do
+            if [ ! -f $lib_path ]; then
+              echo "::error::The lib $lib_path does not exist."
+              exit 1
+            else
+              echo "::notice::The lib $lib_path exists."
+            fi
+          done
+
+
+  # Make a coding style check on the repository.
+  # The coding style checker will return an error if it finds
+  # coding style errors.
+  check_coding_style:
+    runs-on: ubuntu-latest
+    needs: check_compilation
+    container:
+      image: ghcr.io/epitech/coding-style-checker:latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Permissions bug workaround
+        run: "chown -R $(id -un):$(id -gn) ~"
+
+      - name: Git bug workaround
+        run: "chown -R $(id -un):$(id -gn) ."
+
+      - name: Check coding style
+        run: check.sh $(pwd) $(pwd)
+        continue-on-error: true
+
+      - name: 📰 Display coding style errors
+        run: |
+          cat coding-style-reports.log | while read line; do
+            echo "::error file=$(echo $line | cut -d ':' -f 1),\
+          line=$(echo $line | cut -d ':' -f 2),title=$(echo $line | cut -d ':' -f 3)"\
+           coding style error"::$(echo $line | cut -d ':' -f 4)"
+          done
+          if [ -s coding-style-reports.log ]; then
+            exit 1
+          else
+            echo "::notice::No coding style error found."
+          fi
+
+
+  # Run the tests on the repository with the Criterion library.
+  # The tests must be in the tests/ directory and on SRC_TESTS in
+  # the Makefile.
+  # The tests will be run in the Epitest Docker container.
+  run_tests:
+    runs-on: ubuntu-latest
+    needs: check_coding_style
+    container:
+      image: epitechcontent/epitest-docker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Permissions bug workaround
+        run: "chown -R $(id -un):$(id -gn) ~"
+
+      - name: Git bug workaround
+        run: "chown -R $(id -un):$(id -gn) ."
+
+      - name: Run tests
+        run: make tests_run
+        timeout-minutes: 5
+
+      - name: Test execution
+        run: |
+          if [ -f tests/test.out ]; then
+            echo "::notice::Successful test execution."
+          else
+            echo "::warning::Test failed or not available."
+          fi
+
+
+  # Push the repository to the Epitech repository only on push.
+  # The push will be done using the SSH key stored in the
+  # GIT_SSH_PRIVATE_KEY secret.
+  push_to_mirror:
+    runs-on: ubuntu-latest
+    needs: check_coding_style
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to mirror
+        uses: pixta-dev/repository-mirroring-action@v1.1.1
+        with:
+          target_repo_url: ${{ env.MIRROR_URL }}
+          ssh_private_key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+
+      - name: Push successful
+        if: success()
+        run: echo "::notice::Successful mirroring process."
