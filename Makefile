@@ -30,8 +30,6 @@ clean:
 
 fclean: 	clean
 		@rm -f $(NAME)
-		@make -C bonus fclean
-		@rm -f $(BONUS_NAME)
 		$(call RED,"Clean Done ❌!")
 
 re: 		fclean all
