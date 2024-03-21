@@ -19,7 +19,6 @@ extra-source-files:
 description:         Please see the README on GitHub at <https://github.com/Marius-P1/My-Image-Compressor#readme>
 
 dependencies:
-- directory
 - base >= 4.7 && < 5
 
 ghc-options:
