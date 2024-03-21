@@ -24,12 +24,10 @@ source-repository head
 library
   exposed-modules:
       Algorithm
-      ArgsParsing
-      FileParsing
-      OurData
-      Utils
       HandleArgs
-      Lib
+      OurData
+      ParseFile
+      Utils
   other-modules:
       Paths_imageCompressor
   autogen-modules:
