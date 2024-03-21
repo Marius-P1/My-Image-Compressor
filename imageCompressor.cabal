@@ -23,7 +23,11 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Algorithm
+      ArgsParsing
+      FileParsing
+      OurData
+      Utils
   other-modules:
       Paths_imageCompressor
   autogen-modules:
@@ -33,6 +37,7 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , random
   default-language: Haskell2010
 
 executable imageCompressor-exe
@@ -47,6 +52,7 @@ executable imageCompressor-exe
   build-depends:
       base >=4.7 && <5
     , imageCompressor
+    , random
   default-language: Haskell2010
 
 test-suite imageCompressor-test
@@ -62,4 +68,5 @@ test-suite imageCompressor-test
   build-depends:
       base >=4.7 && <5
     , imageCompressor
+    , random
   default-language: Haskell2010
