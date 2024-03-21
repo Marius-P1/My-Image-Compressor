@@ -24,7 +24,7 @@ env:
   LIB: imageCompressor
 
   # The URL of the mirror repository.
-  MIRROR_URL: git@github.com:EpitechPromo2027/B-FUN-400-NAN-4-1-wolfram-marius.pain.git
+  MIRROR_URL: git@github.com:EpitechPromo2027/B-FUN-400-NAN-4-1-compressor-marius.pain.git
 
 
 # Define the jobs to run.
