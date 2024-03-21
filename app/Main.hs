@@ -17,7 +17,7 @@ import OurData (
         Pixel(..)
     )
 
-import ArgsParsing (
+import HandleArgs (
         Options(..),
         parseArgs,
     )

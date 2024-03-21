@@ -5,7 +5,7 @@
 -- HandleArgs
 -}
 
-module ArgsParsing (
+module HandleArgs (
         Options(..),
         defaultOptions,
         options,

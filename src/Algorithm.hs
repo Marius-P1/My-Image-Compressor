@@ -80,7 +80,8 @@ getNewCentroids :: [Pixel] -> [Color] -> [Color] -> [Color]
 getNewCentroids pixels [_] _ = [computeCentroidsFromMeans pixels]
 getNewCentroids pixels (a : as) colors =
     let nearest = getOnlyNearestPixels pixels a colors
-    in computeCentroidsFromMeans nearest : getNewCentroids (filterPixels pixels nearest) as colors
+        filtered = filterPixels pixels nearest
+    in computeCentroidsFromMeans nearest : getNewCentroids filtered as colors
 getNewCentroids _ [] _ = []
 
 applyKMeans :: [Pixel] -> [Color] -> [Color] -> Double -> [Color]
