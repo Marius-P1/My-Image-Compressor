@@ -22,7 +22,7 @@ import ArgsParsing (
         parseArgs,
     )
 
-import FileParsing (
+import ParseFile (
         parseFile
     )
 
