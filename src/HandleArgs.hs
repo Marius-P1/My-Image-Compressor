@@ -5,7 +5,12 @@
 -- HandleArgs
 -}
 
-module HandleArgs (parseArgs) where
+module ArgsParsing (
+        Options(..),
+        defaultOptions,
+        options,
+        parseArgs
+    ) where
 
 import System.Console.GetOpt
 import System.Environment (getArgs)
