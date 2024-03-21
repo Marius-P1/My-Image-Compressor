@@ -28,6 +28,8 @@ library
       FileParsing
       OurData
       Utils
+      HandleArgs
+      Lib
   other-modules:
       Paths_imageCompressor
   autogen-modules:
