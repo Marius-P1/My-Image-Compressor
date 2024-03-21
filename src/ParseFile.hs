@@ -44,7 +44,8 @@ openFile :: FilePath -> IO String
 openFile filePath = do
     contents <- try (readFile filePath) :: IO (Either SomeException String)
     case contents of
-        Left _ -> putStrLn "Error: invalid file" >> exitWith (ExitFailure 84)
+        Left _ -> putStrLn "Error: invalid file" >>
+            exitWith (ExitFailure 84)
         Right c -> return c
 
 parseFile :: FilePath -> IO [Pixel]
