@@ -29,12 +29,18 @@ readReadPoint s = case reads s of
     [(a, "")] -> Just a
     _ -> Nothing
 
+checkReadPixel :: (ReadPosition, ReadColor) -> Maybe (ReadPosition, ReadColor)
+checkReadPixel (point, (r, g, b)) =
+    if r < 0 || r > 255 || g < 0 || g > 255 || b < 0 || b > 255
+        then Nothing
+    else Just (point, (r, g, b))
+
 readReadPixel :: String -> Maybe (ReadPosition, ReadColor)
 readReadPixel s = case words s of
     (a : b : []) -> do
         rPoint <- readReadPoint a
         rColor <- readReadColor b
-        Just (rPoint, rColor)
+        checkReadPixel (rPoint, rColor)
     _ -> Nothing
 
 convertReadPixel :: (ReadPosition, ReadColor) -> Pixel
@@ -51,8 +57,8 @@ openFile filePath = do
 parseFile :: FilePath -> IO [Pixel]
 parseFile filePath = do
     contents <- openFile filePath
-    let lines' = lines contents
-        parsedLines = map readReadPixel lines'
+    let fileLines = lines contents
+        parsedLines = map readReadPixel fileLines
     if all isJust parsedLines
         then return $ map convertReadPixel $ catMaybes parsedLines
         else putStrLn "Error: invalid file" >> exitWith (ExitFailure 84)
