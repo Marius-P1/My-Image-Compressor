@@ -16,14 +16,18 @@ import OurData (
         Pixel(..)
     )
 
+import System.Random (StdGen, randomR)
+
 getMaxColor :: Color
 getMaxColor = Color maxBound maxBound maxBound
 
 getFailingColor :: Int -> [Color]
 getFailingColor n = replicate n getMaxColor
 
-getRandomColor :: [Pixel] -> Int -> [Color]
-getRandomColor _ 0 = []
-getRandomColor pixels n =
-    let (Pixel _ _ colore) = pixels !! (n - 1)
-    in colore : getRandomColor pixels (n - 1)
+getRandomColor :: StdGen -> [Pixel] -> Int -> [Color]
+getRandomColor _ _ 0 = []
+getRandomColor g0 pixels n =
+    let (i, g1) = randomR (0, length pixels - 1) g0
+        selectedPixel = pixels !! i
+        restPixels = filter (/= selectedPixel) pixels
+    in color selectedPixel : getRandomColor g1 restPixels (n - 1)
