@@ -32,6 +32,7 @@ import Utils (
     )
 
 import System.Exit (exitWith, ExitCode(..))
+import System.Random (newStdGen)
 
 displayResult:: [(Color, [Pixel])] -> IO ()
 displayResult [] = return ()
@@ -45,9 +46,10 @@ main :: IO ()
 main = do
     Options {oNumber = Just n, oLimit = Just l, oPath = Just p} <- parseArgs
     rPixels <- parseFile p
+    seed <- newStdGen
     if length rPixels < n
         then putStrLn "Error: not enough pixels" >>
             exitWith (ExitFailure 84)
-    else let randColors = getRandomColor rPixels n
+    else let randColors = getRandomColor seed rPixels n
              colors = applyKMeans rPixels randColors (getFailingColor n) l
          in displayResult (getFinalClusters rPixels colors colors)
