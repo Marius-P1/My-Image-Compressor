@@ -5,7 +5,17 @@
 -- ParseFile
 -}
 
-module ParseFile (parseFile) where
+module ParseFile (
+    ReadPosition,
+    ReadColor,
+    readReadColor,
+    readReadPoint,
+    checkReadPixel,
+    readReadPixel,
+    convertReadPixel,
+    openFile,
+    parseFile
+    ) where
 
 import OurData (
     Color(..),

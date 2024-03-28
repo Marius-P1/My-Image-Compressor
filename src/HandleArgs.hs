@@ -9,6 +9,9 @@ module HandleArgs (
         Options(..),
         defaultOptions,
         options,
+        getHelp,
+        checkArgs,
+        parseOptions,
         parseArgs
     ) where
 
@@ -22,7 +25,7 @@ data Options = Options {
         oNumber :: Maybe Int,
         oLimit :: Maybe Double,
         oPath :: Maybe String
-    } deriving (Show)
+    } deriving (Show, Eq)
 
 defaultOptions :: Options
 defaultOptions = Options {
