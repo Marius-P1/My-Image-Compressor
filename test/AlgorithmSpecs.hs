@@ -27,7 +27,7 @@ import Algorithm (
     )
 
 algorithmSpecs :: Spec
-algorithmSpecs = describe "Algorithms functions :" $ do
+algorithmSpecs = describe "Algorithms Functions :" $ do
     computeDistanceSpec
     computeDistancePixelToColorSpec
     computeDistanceColorToColorSpec
@@ -65,7 +65,7 @@ computeDistancePixelToColorSpec = describe "Function computeDistancePixelToColor
     it "Should return the distance between pixel : (10 10 (10, 10, 10)) and color : (10, 10, 10) " $
         computeDistancePixelToColor (Pixel 10 10 (Color 10 10 10)) (Color 10 10 10) `shouldBe` 0.0
     it "Should return the distance between pixel : (10 10 (10, 10, 10)) and color : (0, 0, 0) " $
-        computeDistancePixelToCo5 5 5lor (Pixel 10 10 (Color 10 10 10)) (Color 0 0 0) `shouldBe` sqrt 300.0
+        computeDistancePixelToColor (Pixel 10 10 (Color 10 10 10)) (Color 0 0 0) `shouldBe` sqrt 300.0
 
 computeDistanceColorToColorSpec :: Spec
 computeDistanceColorToColorSpec = describe "Function computeDistanceColorToColor :" $ do
@@ -133,8 +133,8 @@ getClosestColorSpec :: Spec
 getClosestColorSpec = describe "Function getClosestColor :" $ do
     it "Should return the closest color to pixel : (0, 0, (0, 0, 0)) in [(0, 0, 0), (0, 0, 0), (0, 0, 0)]" $
         getClosestColor (Pixel 0 0 (Color 0 0 0)) [Color 0 0 0, Color 0 0 0, Color 0 0 0] `shouldBe` Color 0 0 0
-    it "Should return the closest color to pixel : (0, 0, (0, 0, 0)) in [(1, 1, 1), (1, 1, 1), (1, 1, 1)]" $
-        getClosestColor (Pixel 0 0 (Color 0 0 0)) [Color 1 1 1, Color 1 1 1, Color 1 1 1] `shouldBe` Color 1 1 1
+    it "Should return the closest color to pixel : (0, 0, (0, 0, 0)) in [(1, 1, 1), (1, 0, 1), (1, 1, 1)]" $
+        getClosestColor (Pixel 0 0 (Color 0 0 0)) [Color 1 1 1, Color 1 0 1, Color 1 1 1] `shouldBe` Color 1 0 1
     it "Should return the closest color to pixel : (0, 0, (0, 0, 0)) in [(1, 0, 0), (1, 0, 0), (1, 0, 0)]" $
         getClosestColor (Pixel 0 0 (Color 0 0 0)) [Color 1 0 0, Color 1 0 0, Color 1 0 0] `shouldBe` Color 1 0 0
     it "Should return the closest color to pixel : (10, 10, (10, 10, 10)) in [(10, 10, 10), (10, 10, 10), (10, 10, 10)]" $
@@ -158,3 +158,37 @@ filterPixelsSpec = describe "Function filterPixels :" $ do
         filterPixels [] [Pixel 0 0 (Color 0 0 0), Pixel 3 3 (Color 3 3 3)] `shouldBe` []
 
 getOnlyNearestPixelsSpec :: Spec
+getOnlyNearestPixelsSpec = describe "Function getOnlyNearestPixels :" $ do
+    it "Should return the pixels of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] that are closest to (0, 0, 0) in [(0, 0, 0), (3, 3, (3, 3, 3))]" $
+        getOnlyNearestPixels [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] (Color 0 0 0) [Color 0 0 0, Color 3 3 3] `shouldBe` [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1)]
+    it "Should return the pixels of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] that are closest to (0, 0, 0) in [(0, 0, 0), (1, 1, (1, 1, 1)), (2, 2, (2, 2, 2))]" $
+        getOnlyNearestPixels [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] (Color 0 0 0) [Color 0 0 0, Color 1 1 1, Color 2 2 2] `shouldBe` [(Pixel 0 0 (Color 0 0 0))]
+    it "Should return the pixels of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] that are closest to (10, 10, 10) in [(0, 0, 0), (10, 10, 10)]" $
+        getOnlyNearestPixels [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] (Color 10 10 10) [Color 0 0 0, Color 10 10 10] `shouldBe` []
+
+getNewCentroidsSpec :: Spec
+getNewCentroidsSpec = describe "Function getNewCentroids :" $ do
+    it "Should return the new centroids of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2)), (10, 10, (10, 10, 10))] with colors [(0, 0, 0), (10, 10, 10)]" $
+        getNewCentroids [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2), Pixel 10 10 (Color 10 10 10)] [Color 0 0 0, Color 10 10 10] [Color 0 0 0, Color 10 10 10] `shouldBe` [Color 1 1 1, Color 10 10 10]
+    it "Should return the new centroids of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] with colors [(0, 0, 0), (1, 1, 1), (2, 2, 2)]" $
+        getNewCentroids [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] [Color 0 0 0, Color 1 1 1, Color 2 2 2] [Color 0 0 0, Color 1 1 1, Color 2 2 2] `shouldBe` [Color 0 0 0, Color 1 1 1, Color 2 2 2]
+    it "Should return the new centroids of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] with colors [(0, 0, 0)]" $
+        getNewCentroids [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] [Color 0 0 0] [Color 0 0 0] `shouldBe` [Color 1 1 1]
+    it "Should return the new centroids of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] with colors []" $
+        getNewCentroids [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] [] [] `shouldBe` []
+
+applyKMeansSpec :: Spec
+applyKMeansSpec = describe "Function applyKMeans :" $ do
+    it "Should return the new centroids of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] with colors [(0, 0, 0), (1, 1, 1), (2, 2, 2)] and limit 1.0" $
+        applyKMeans [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] [Color 0 0 0, Color 1 1 1, Color 2 2 2] [Color 0 0 0, Color 1 1 1, Color 2 2 2] 1.0 `shouldBe` [Color 0 0 0, Color 1 1 1, Color 2 2 2]
+    it "Should return the new centroids of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] with colors [(0, 0, 0), (3, 3, 3)] and limit 100.0" $
+        applyKMeans [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] [Color 0 0 0, Color 3 3 3] [Color 0 0 0, Color 3 3 3] 100.0 `shouldBe` [Color 0 0 0, Color 3 3 3]
+    it "Should return the new centroids of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] with colors [0, 0, 0), (10, 10, 10) and limit 1.0" $
+        applyKMeans [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] [Color 0 0 0, Color 10 10 10] [Color maxBound maxBound maxBound, Color maxBound maxBound maxBound] 1.0 `shouldBe` [Color 1 1 1, Color 0 0 0]
+
+getFinalClustersSpec :: Spec
+getFinalClustersSpec = describe "Function getFinalClusters :" $ do
+    it "Should return the final clusters of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] with colors [(0, 0, 0), (3, 3, 3)]" $
+        getFinalClusters [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] [Color 0 0 0, Color 3 3 3] [Color 0 0 0, Color 3 3 3] `shouldBe` [(Color 0 0 0, [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1)]), (Color 3 3 3, [Pixel 2 2 (Color 2 2 2)])]
+    it "Should return the final clusters of the pixels list : [(0, 0, (0, 0, 0)), (1, 1 (1, 1, 1)), (2, 2, (2, 2, 2))] with colors []" $
+        getFinalClusters [Pixel 0 0 (Color 0 0 0), Pixel 1 1 (Color 1 1 1), Pixel 2 2 (Color 2 2 2)] [] [] `shouldBe` []
