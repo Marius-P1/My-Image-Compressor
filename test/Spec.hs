@@ -7,11 +7,16 @@
 
 import Test.Hspec
 
+import AlgorithmSpecs (algorithmSpecs)
+import HandleArgsSpecs (handleArgsSpecs)
+import OurDataSpecs (ourDataSpecs)
+import ParseFileSpecs (parseFileSpecs)
+import UtilsSpecs (utilsSpecs)
 
 main :: IO ()
 main = hspec $ do
-    algorithmSpec
-    handleArgsSpec
-    ourDataSpec
-    parseFileSpec
-    utilsSpec
+    algorithmSpecs
+    handleArgsSpecs
+    ourDataSpecs
+    parseFileSpecs
+    utilsSpecs
