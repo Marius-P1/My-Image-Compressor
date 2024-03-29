@@ -27,7 +27,7 @@ instance Show Color where
 
 instance Num Color where
     (+) (Color r1 g1 b1) (Color r2 g2 b2) = Color (r1 + r2) (g1 + g2) (b1 + b2)
-    -- Les autres opérations ne sont pas définies
+    -- Other operations are not defined for colors
     (*) _ _ = error "Multiplication of colors is not defined"
     abs _ = error "abs is not defined for colors"
     signum _ = error "signum is not defined for colors"
